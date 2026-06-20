@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mundial Draft 2026</title>
+<title>Superliga USA 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -58,7 +58,7 @@
     width: 140px;
     height: 140px;
     background: var(--rojo);
-    opacity: 0.18;
+    opacity: 0.32;
     border-radius: 50%;
   }
 
@@ -70,13 +70,14 @@
     z-index: 1;
   }
 
-  header p {
-    position: relative;
-    z-index: 1;
-    font-size: 0.85rem;
-    opacity: 0.85;
-    margin-top: 2px;
-    letter-spacing: 0.5px;
+  header h1::after {
+    content: "";
+    display: block;
+    width: 70px;
+    height: 4px;
+    background: var(--rojo);
+    margin: 10px auto 0;
+    border-radius: 4px;
   }
 
   nav.tabs {
@@ -105,10 +106,10 @@
   }
 
   .tab.active {
-    background: var(--verde);
-    border-color: var(--verde);
+    background: var(--rojo);
+    border-color: var(--rojo);
     color: white;
-    box-shadow: 0 3px 10px rgba(60,172,59,0.35);
+    box-shadow: 0 3px 10px rgba(230,29,37,0.35);
   }
 
   main {
@@ -200,7 +201,7 @@
 
   .pts {
     font-weight: 800;
-    color: var(--verde);
+    color: var(--rojo);
     font-size: 1rem;
   }
 
@@ -267,7 +268,7 @@
     font-family: 'Bebas Neue', sans-serif;
     letter-spacing: 1px;
     font-size: 1rem;
-    background: var(--verde);
+    background: var(--rojo);
     color: white;
     border: none;
     padding: 11px 22px;
@@ -427,14 +428,13 @@
 <body>
 
 <header>
-  <h1>⚽ MUNDIAL DRAFT 2026</h1>
-  <p>Liga de selecciones — Fase de grupos, Fecha 2</p>
+  <h1>⚽ SUPERLIGA USA 2026</h1>
 </header>
 
 <nav class="tabs">
   <div class="tab active" onclick="showTab('tabla')">Tabla</div>
   <div class="tab" onclick="showTab('equipos')">Equipos</div>
-  <div class="tab" onclick="showTab('cargar')">Cargar día</div>
+  <div class="tab" onclick="showTab('cargar')">Cargar partidos</div>
 </nav>
 
 <main>
@@ -475,19 +475,8 @@
   <!-- CARGAR RESULTADO -->
   <section id="tab-cargar" class="panel">
 
-    <div class="card" id="login-card">
-      <h2>🔒 Acceso restringido</h2>
-      <div class="login-box">
-        <p>Ingresá la clave para cargar resultados</p>
-        <input type="password" id="clave-input" placeholder="Clave">
-        <div class="error-msg" id="clave-error">Clave incorrecta</div>
-        <br>
-        <button onclick="checkClave()">Ingresar</button>
-      </div>
-    </div>
-
-    <div class="card" id="carga-card" style="display:none;">
-      <h2>📝 Cargar resultado de partido</h2>
+    <div class="card" id="carga-card">
+      <h2>📝 Cargar partido</h2>
       <div class="form-row">
         <div class="form-group">
           <label>Equipo 1</label>
@@ -520,10 +509,9 @@
       <div class="error-msg" id="form-error">Elegí dos equipos distintos</div>
 
       <button onclick="guardarResultado()">Guardar resultado</button>
-      <button class="secondary" onclick="logout()" style="margin-left:8px;">Salir</button>
     </div>
 
-    <div class="card" id="historial-card" style="display:none;">
+    <div class="card" id="historial-card">
       <h2>🗂️ Historial de partidos cargados</h2>
       <div id="historial-list"></div>
     </div>
@@ -557,9 +545,6 @@ window.dispatchEvent(new Event('firebase-ready'));
 </script>
 
 <script>
-// ===== CLAVE DE ACCESO =====
-const CLAVE_ACCESO = "mundial2026"; // <-- cambiá esta clave
-
 // ===== DATOS: JUGADORES Y EQUIPOS =====
 const JUGADORES = {
   "Fede":   ["Francia", "Senegal", "Canada", "Curazao"],
@@ -593,6 +578,7 @@ window.addEventListener('firebase-ready', () => {
   refs = window.dbRefs;
   dbReady = true;
   escucharPartidos();
+  poblarSelects();
 });
 
 function escucharPartidos() {
@@ -683,36 +669,6 @@ function renderTabla() {
       <td class="pts">${f.pts}</td>
     </tr>
   `).join('');
-}
-
-// ===== LOGIN =====
-function checkClave() {
-  const input = document.getElementById('clave-input').value;
-  if (input === CLAVE_ACCESO) {
-    document.getElementById('login-card').style.display = 'none';
-    document.getElementById('carga-card').style.display = 'block';
-    document.getElementById('historial-card').style.display = 'block';
-    sessionStorage.setItem('mundial-auth', '1');
-    poblarSelects();
-  } else {
-    document.getElementById('clave-error').style.display = 'block';
-  }
-}
-window.checkClave = checkClave;
-
-function logout() {
-  sessionStorage.removeItem('mundial-auth');
-  document.getElementById('login-card').style.display = 'block';
-  document.getElementById('carga-card').style.display = 'none';
-  document.getElementById('historial-card').style.display = 'none';
-  document.getElementById('clave-input').value = '';
-}
-window.logout = logout;
-
-if (sessionStorage.getItem('mundial-auth') === '1') {
-  document.getElementById('login-card').style.display = 'none';
-  document.getElementById('carga-card').style.display = 'block';
-  document.getElementById('historial-card').style.display = 'block';
 }
 
 // ===== FORM CARGA =====
