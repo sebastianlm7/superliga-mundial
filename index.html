@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mundial Draft 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde: #3CAC3B;
+    --azul: #2A398D;
+    --rojo: #E61D25;
+    --gris-claro: #D1D4D1;
+    --gris-oscuro: #474A4A;
+    --bg: #f4f5f4;
+    --white: #ffffff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--gris-oscuro);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  header {
+    background: linear-gradient(120deg, var(--azul) 0%, #1d2a66 100%);
+    padding: 28px 16px 22px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+
+  header::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    right: -40px;
+    width: 160px;
+    height: 160px;
+    background: var(--verde);
+    opacity: 0.18;
+    border-radius: 50%;
+  }
+
+  header::after {
+    content: "";
+    position: absolute;
+    bottom: -50px;
+    left: -30px;
+    width: 140px;
+    height: 140px;
+    background: var(--rojo);
+    opacity: 0.18;
+    border-radius: 50%;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.6rem;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header p {
+    position: relative;
+    z-index: 1;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+  }
+
+  nav.tabs {
+    display: flex;
+    max-width: 900px;
+    margin: 18px auto 0;
+    padding: 0 12px;
+    gap: 8px;
+    overflow-x: auto;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 12px 10px;
+    background: var(--white);
+    border: 2px solid var(--gris-claro);
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+    color: var(--gris-oscuro);
+    transition: all 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .tab.active {
+    background: var(--verde);
+    border-color: var(--verde);
+    color: white;
+    box-shadow: 0 3px 10px rgba(60,172,59,0.35);
+  }
+
+  main {
+    max-width: 900px;
+    margin: 20px auto 0;
+    padding: 0 12px;
+  }
+
+  .panel { display: none; animation: fadeIn 0.25s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+  }
+
+  .card h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    color: var(--azul);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* TABLA DE POSICIONES */
+  table.posiciones {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+
+  table.posiciones th {
+    background: var(--azul);
+    color: white;
+    padding: 10px 6px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.5px;
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  table.posiciones th:first-child { text-align: left; border-radius: 8px 0 0 0; }
+  table.posiciones th:last-child { border-radius: 0 8px 0 0; }
+
+  table.posiciones td {
+    padding: 10px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--gris-claro);
+  }
+
+  table.posiciones td.nombre {
+    text-align: left;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  table.posiciones tr:nth-child(even) { background: #fafafa; }
+  table.posiciones tr:hover { background: #eef6ee; }
+
+  .puesto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gris-claro);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--gris-oscuro);
+  }
+
+  tr:nth-child(1) .puesto { background: #ffd54a; color: #5c4400; }
+  tr:nth-child(2) .puesto { background: #d9d9d9; color: #3a3a3a; }
+  tr:nth-child(3) .puesto { background: #d7a36a; color: #4a2e0f; }
+
+  .pts {
+    font-weight: 800;
+    color: var(--verde);
+    font-size: 1rem;
+  }
+
+  /* EQUIPOS */
+  .equipos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 12px;
+  }
+
+  .jugador-card {
+    border: 2px solid var(--gris-claro);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: #fcfcfc;
+  }
+
+  .jugador-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--azul);
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--verde);
+  }
+
+  .jugador-card ul { list-style: none; }
+  .jugador-card li {
+    padding: 4px 0;
+    font-size: 0.88rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .badge-pts {
+    background: var(--verde);
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 20px;
+  }
+
+  /* CARGAR RESULTADO */
+  .login-box {
+    text-align: center;
+    padding: 30px 16px;
+  }
+
+  .login-box input {
+    padding: 10px 14px;
+    border: 2px solid var(--gris-claro);
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 220px;
+    text-align: center;
+    margin: 12px 0;
+  }
+
+  button {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    font-size: 1rem;
+    background: var(--verde);
+    color: white;
+    border: none;
+    padding: 11px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: filter 0.15s ease;
+  }
+
+  button:hover { filter: brightness(1.08); }
+  button.secondary { background: var(--gris-oscuro); }
+  button.danger { background: var(--rojo); }
+
+  .form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .form-group {
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gris-oscuro);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  select, input[type="number"] {
+    width: 100%;
+    padding: 9px 10px;
+    border: 2px solid var(--gris-claro);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    background: white;
+  }
+
+  .vs-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .vs-label {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--rojo);
+    font-size: 1.1rem;
+    padding-top: 16px;
+  }
+
+  .definicion-box {
+    display: none;
+    background: #fff7e0;
+    border: 1px solid #ffd54a;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+  }
+
+  .definicion-box.show { display: block; }
+
+  .historial-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--gris-claro);
+    font-size: 0.88rem;
+  }
+
+  .historial-item:last-child { border-bottom: none; }
+
+  .historial-match {
+    font-weight: 600;
+  }
+
+  .historial-tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    color: white;
+    font-weight: 700;
+  }
+
+  .tag-directa { background: var(--verde); }
+  .tag-penales { background: var(--azul); }
+  .tag-empate { background: var(--gris-oscuro); }
+
+  .btn-del {
+    background: none;
+    border: none;
+    color: var(--rojo);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .empty-msg {
+    text-align: center;
+    color: var(--gris-oscuro);
+    opacity: 0.6;
+    padding: 20px;
+    font-size: 0.9rem;
+  }
+
+  .error-msg {
+    color: var(--rojo);
+    font-size: 0.85rem;
+    margin-top: 6px;
+    display: none;
+  }
+
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--gris-oscuro);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 999;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .leyenda {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.75rem;
+    color: var(--gris-oscuro);
+    margin-top: 10px;
+    opacity: 0.8;
+  }
+
+  .leyenda span { display: flex; align-items: center; gap: 4px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>⚽ MUNDIAL DRAFT 2026</h1>
+  <p>Liga de selecciones — Fase de grupos, Fecha 2</p>
+</header>
+
+<nav class="tabs">
+  <div class="tab active" onclick="showTab('tabla')">Tabla</div>
+  <div class="tab" onclick="showTab('equipos')">Equipos</div>
+  <div class="tab" onclick="showTab('cargar')">Cargar día</div>
+</nav>
+
+<main>
+
+  <!-- TABLA DE POSICIONES -->
+  <section id="tab-tabla" class="panel active">
+    <div class="card">
+      <h2>📊 Tabla de posiciones</h2>
+      <table class="posiciones">
+        <thead>
+          <tr>
+            <th style="width:36px">#</th>
+            <th>Jugador</th>
+            <th>PJ</th>
+            <th>DG</th>
+            <th>PTS</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          <tr><td colspan="5" class="empty-msg">Cargando datos...</td></tr>
+        </tbody>
+      </table>
+      <div class="leyenda">
+        <span><b>PJ</b> = Partidos Jugados</span>
+        <span><b>DG</b> = Diferencia de Gol</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPOS -->
+  <section id="tab-equipos" class="panel">
+    <div class="card">
+      <h2>🌍 Equipos por jugador</h2>
+      <div class="equipos-grid" id="equipos-grid"></div>
+    </div>
+  </section>
+
+  <!-- CARGAR RESULTADO -->
+  <section id="tab-cargar" class="panel">
+
+    <div class="card" id="login-card">
+      <h2>🔒 Acceso restringido</h2>
+      <div class="login-box">
+        <p>Ingresá la clave para cargar resultados</p>
+        <input type="password" id="clave-input" placeholder="Clave">
+        <div class="error-msg" id="clave-error">Clave incorrecta</div>
+        <br>
+        <button onclick="checkClave()">Ingresar</button>
+      </div>
+    </div>
+
+    <div class="card" id="carga-card" style="display:none;">
+      <h2>📝 Cargar resultado de partido</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Equipo 1</label>
+          <select id="equipo1"></select>
+        </div>
+        <div class="form-group" style="max-width:70px;">
+          <label>Goles</label>
+          <input type="number" id="goles1" min="0" value="0">
+        </div>
+        <div class="vs-label">VS</div>
+        <div class="form-group" style="max-width:70px;">
+          <label>Goles</label>
+          <input type="number" id="goles2" min="0" value="0">
+        </div>
+        <div class="form-group">
+          <label>Equipo 2</label>
+          <select id="equipo2"></select>
+        </div>
+      </div>
+
+      <div class="definicion-box" id="definicion-box">
+        <label style="display:block;margin-bottom:6px;font-weight:600;">¿Cómo se definió el empate?</label>
+        <select id="tipo-definicion">
+          <option value="empate">Empate (queda como empate)</option>
+          <option value="penales1">Ganó Equipo 1 por penales/alargue</option>
+          <option value="penales2">Ganó Equipo 2 por penales/alargue</option>
+        </select>
+      </div>
+
+      <div class="error-msg" id="form-error">Elegí dos equipos distintos</div>
+
+      <button onclick="guardarResultado()">Guardar resultado</button>
+      <button class="secondary" onclick="logout()" style="margin-left:8px;">Salir</button>
+    </div>
+
+    <div class="card" id="historial-card" style="display:none;">
+      <h2>🗂️ Historial de partidos cargados</h2>
+      <div id="historial-list"></div>
+    </div>
+
+  </section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, push, remove, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAt3wFITMpGcB9qeLi7i_HySTvVTlzBVpo",
+  authDomain: "superliga-mundial.firebaseapp.com",
+  databaseURL: "https://superliga-mundial-default-rtdb.firebaseio.com",
+  projectId: "superliga-mundial",
+  storageBucket: "superliga-mundial.firebasestorage.app",
+  messagingSenderId: "624366416482",
+  appId: "1:624366416482:web:01fc9d349b81a77436573b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.dbRefs = { ref, set, push, remove, onValue, db };
+window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<script>
+// ===== CLAVE DE ACCESO =====
+const CLAVE_ACCESO = "mundial2026"; // <-- cambiá esta clave
+
+// ===== DATOS: JUGADORES Y EQUIPOS =====
+const JUGADORES = {
+  "Fede":   ["Francia", "Senegal", "Canada", "Curazao"],
+  "Licha":  ["Argentina", "Corea del Sur", "Argelia", "Haiti"],
+  "Equi":   ["España", "RD Congo", "Arabia Saudita", "Sudafrica"],
+  "Rane":   ["Inglaterra", "Suiza", "Austria", "Panama"],
+  "Bryan":  ["Alemania", "Uruguay", "Australia", "Jordania"],
+  "Braian": ["Marruecos", "Costa de Marfil", "Ecuador", "Irak"],
+  "Nico":   ["Estados Unidos", "Egipto", "Republica Checa", "Tunez"],
+  "Seba":   ["Brasil", "Suecia", "Cabo Verde", "Iran"],
+  "Fran":   ["Portugal", "Croacia", "Turquia", "Qatar"],
+  "Mati":   ["Paises Bajos", "Belgica", "Bosnia", "Uzbekistan"],
+  "Mori":   ["Colombia", "Mexico", "Nueva Zelanda", "Paraguay"],
+  "Juli":   ["Japon", "Noruega", "Escocia", "Ghana"]
+};
+
+// Mapa equipo -> jugador
+const EQUIPO_A_JUGADOR = {};
+Object.entries(JUGADORES).forEach(([jugador, equipos]) => {
+  equipos.forEach(eq => EQUIPO_A_JUGADOR[eq] = jugador);
+});
+
+// Lista plana de equipos ordenada alfabéticamente
+const TODOS_EQUIPOS = Object.keys(EQUIPO_A_JUGADOR).sort();
+
+let partidos = {}; // se llena desde Firebase
+let dbReady = false;
+let refs;
+
+window.addEventListener('firebase-ready', () => {
+  refs = window.dbRefs;
+  dbReady = true;
+  escucharPartidos();
+});
+
+function escucharPartidos() {
+  const partidosRef = refs.ref(refs.db, 'partidos');
+  refs.onValue(partidosRef, (snapshot) => {
+    partidos = snapshot.val() || {};
+    renderTabla();
+    renderHistorial();
+  });
+}
+
+// ===== TABS =====
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab[onclick="showTab('${tab}')"]`).classList.add('active');
+  document.getElementById(`tab-${tab}`).classList.add('active');
+}
+window.showTab = showTab;
+
+// ===== RENDER EQUIPOS =====
+function renderEquipos() {
+  const grid = document.getElementById('equipos-grid');
+  grid.innerHTML = '';
+  Object.entries(JUGADORES).forEach(([jugador, equipos]) => {
+    const div = document.createElement('div');
+    div.className = 'jugador-card';
+    div.innerHTML = `
+      <h3>${jugador}</h3>
+      <ul>
+        ${equipos.map(eq => `<li>${eq}</li>`).join('')}
+      </ul>
+    `;
+    grid.appendChild(div);
+  });
+}
+renderEquipos();
+
+// ===== CALCULO DE PUNTOS =====
+function calcularStats() {
+  const stats = {};
+  Object.keys(JUGADORES).forEach(j => {
+    stats[j] = { pts: 0, pj: 0, gf: 0, gc: 0 };
+  });
+
+  Object.values(partidos).forEach(p => {
+    const j1 = EQUIPO_A_JUGADOR[p.equipo1];
+    const j2 = EQUIPO_A_JUGADOR[p.equipo2];
+    if (!j1 || !j2) return;
+
+    stats[j1].pj++;
+    stats[j2].pj++;
+    stats[j1].gf += p.goles1;
+    stats[j1].gc += p.goles2;
+    stats[j2].gf += p.goles2;
+    stats[j2].gc += p.goles1;
+
+    if (p.resultado === 'directa1') { stats[j1].pts += 3; }
+    else if (p.resultado === 'directa2') { stats[j2].pts += 3; }
+    else if (p.resultado === 'penales1') { stats[j1].pts += 2; }
+    else if (p.resultado === 'penales2') { stats[j2].pts += 2; }
+    else if (p.resultado === 'empate') { stats[j1].pts += 1; stats[j2].pts += 1; }
+  });
+
+  return stats;
+}
+
+function renderTabla() {
+  const stats = calcularStats();
+  const filas = Object.entries(stats).map(([jugador, s]) => ({
+    jugador, ...s, dg: s.gf - s.gc
+  }));
+
+  filas.sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
+
+  const tbody = document.getElementById('tabla-body');
+  if (filas.every(f => f.pj === 0)) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-msg">Todavía no se cargaron partidos</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filas.map((f, i) => `
+    <tr>
+      <td><span class="puesto">${i + 1}</span></td>
+      <td class="nombre">${f.jugador}</td>
+      <td>${f.pj}</td>
+      <td>${f.dg > 0 ? '+' + f.dg : f.dg}</td>
+      <td class="pts">${f.pts}</td>
+    </tr>
+  `).join('');
+}
+
+// ===== LOGIN =====
+function checkClave() {
+  const input = document.getElementById('clave-input').value;
+  if (input === CLAVE_ACCESO) {
+    document.getElementById('login-card').style.display = 'none';
+    document.getElementById('carga-card').style.display = 'block';
+    document.getElementById('historial-card').style.display = 'block';
+    sessionStorage.setItem('mundial-auth', '1');
+    poblarSelects();
+  } else {
+    document.getElementById('clave-error').style.display = 'block';
+  }
+}
+window.checkClave = checkClave;
+
+function logout() {
+  sessionStorage.removeItem('mundial-auth');
+  document.getElementById('login-card').style.display = 'block';
+  document.getElementById('carga-card').style.display = 'none';
+  document.getElementById('historial-card').style.display = 'none';
+  document.getElementById('clave-input').value = '';
+}
+window.logout = logout;
+
+if (sessionStorage.getItem('mundial-auth') === '1') {
+  document.getElementById('login-card').style.display = 'none';
+  document.getElementById('carga-card').style.display = 'block';
+  document.getElementById('historial-card').style.display = 'block';
+}
+
+// ===== FORM CARGA =====
+function poblarSelects() {
+  const sel1 = document.getElementById('equipo1');
+  const sel2 = document.getElementById('equipo2');
+  const opciones = TODOS_EQUIPOS.map(eq =>
+    `<option value="${eq}">${eq} (${EQUIPO_A_JUGADOR[eq]})</option>`
+  ).join('');
+  sel1.innerHTML = `<option value="">Elegir equipo...</option>` + opciones;
+  sel2.innerHTML = `<option value="">Elegir equipo...</option>` + opciones;
+}
+
+function actualizarDefinicion() {
+  const g1 = parseInt(document.getElementById('goles1').value) || 0;
+  const g2 = parseInt(document.getElementById('goles2').value) || 0;
+  const box = document.getElementById('definicion-box');
+  if (g1 === g2) {
+    box.classList.add('show');
+  } else {
+    box.classList.remove('show');
+  }
+}
+document.getElementById('goles1').addEventListener('input', actualizarDefinicion);
+document.getElementById('goles2').addEventListener('input', actualizarDefinicion);
+
+function guardarResultado() {
+  const equipo1 = document.getElementById('equipo1').value;
+  const equipo2 = document.getElementById('equipo2').value;
+  const goles1 = parseInt(document.getElementById('goles1').value) || 0;
+  const goles2 = parseInt(document.getElementById('goles2').value) || 0;
+  const errorMsg = document.getElementById('form-error');
+
+  if (!equipo1 || !equipo2 || equipo1 === equipo2) {
+    errorMsg.style.display = 'block';
+    return;
+  }
+  errorMsg.style.display = 'none';
+
+  let resultado;
+  if (goles1 > goles2) {
+    resultado = 'directa1';
+  } else if (goles2 > goles1) {
+    resultado = 'directa2';
+  } else {
+    const tipoDef = document.getElementById('tipo-definicion').value;
+    resultado = tipoDef; // 'empate', 'penales1', 'penales2'
+  }
+
+  const nuevoPartido = {
+    equipo1, equipo2, goles1, goles2, resultado,
+    fecha: new Date().toISOString()
+  };
+
+  const partidosRef = refs.ref(refs.db, 'partidos');
+  const nuevoRef = refs.push(partidosRef);
+  refs.set(nuevoRef, nuevoPartido).then(() => {
+    mostrarToast('✅ Resultado guardado');
+    document.getElementById('equipo1').value = '';
+    document.getElementById('equipo2').value = '';
+    document.getElementById('goles1').value = '0';
+    document.getElementById('goles2').value = '0';
+    document.getElementById('definicion-box').classList.remove('show');
+  });
+}
+window.guardarResultado = guardarResultado;
+
+function eliminarPartido(id) {
+  if (!confirm('¿Eliminar este partido?')) return;
+  const partidoRef = refs.ref(refs.db, 'partidos/' + id);
+  refs.remove(partidoRef).then(() => mostrarToast('🗑️ Partido eliminado'));
+}
+window.eliminarPartido = eliminarPartido;
+
+function tagInfo(resultado) {
+  switch(resultado) {
+    case 'directa1':
+    case 'directa2':
+      return { txt: 'Victoria directa', cls: 'tag-directa' };
+    case 'penales1':
+    case 'penales2':
+      return { txt: 'Penales/Alargue', cls: 'tag-penales' };
+    case 'empate':
+      return { txt: 'Empate', cls: 'tag-empate' };
+    default:
+      return { txt: '', cls: '' };
+  }
+}
+
+function renderHistorial() {
+  const list = document.getElementById('historial-list');
+  const entries = Object.entries(partidos).sort((a, b) =>
+    new Date(b[1].fecha) - new Date(a[1].fecha)
+  );
+
+  if (entries.length === 0) {
+    list.innerHTML = `<div class="empty-msg">Todavía no se cargaron partidos</div>`;
+    return;
+  }
+
+  list.innerHTML = entries.map(([id, p]) => {
+    const tag = tagInfo(p.resultado);
+    return `
+      <div class="historial-item">
+        <span class="historial-match">${p.equipo1} ${p.goles1} - ${p.goles2} ${p.equipo2}</span>
+        <span class="historial-tag ${tag.cls}">${tag.txt}</span>
+        <button class="btn-del" onclick="eliminarPartido('${id}')">✕</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function mostrarToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+</script>
+
+</body>
+</html>
