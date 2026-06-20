@@ -180,6 +180,68 @@
     gap: 8px;
   }
 
+  .nombre-tooltip-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: default;
+  }
+
+  .nombre-tooltip-wrap .tooltip-equipos {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--azul);
+    color: white;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    z-index: 20;
+  }
+
+  .nombre-tooltip-wrap .tooltip-equipos::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--azul);
+  }
+
+  .nombre-tooltip-wrap .tooltip-equipos strong {
+    color: #ffd54a;
+  }
+
+  .nombre-tooltip-wrap:hover .tooltip-equipos {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .tooltip-equipos ul {
+    list-style: none;
+    margin-top: 4px;
+  }
+
+  .tooltip-equipos li {
+    padding: 1px 0;
+    white-space: nowrap;
+  }
+
+  .tooltip-equipos li::before {
+    content: "⚽ ";
+    font-size: 0.7rem;
+  }
+
   table.posiciones tr:nth-child(even) { background: #fafafa; }
   table.posiciones tr:hover { background: #eef6ee; }
 
@@ -660,14 +722,30 @@ function renderTabla() {
     return;
   }
 
-  tbody.innerHTML = filas.map((f, i) => `
+  tbody.innerHTML = filas.map((f, i) => {
+    const equipos = JUGADORES[f.jugador] || [];
+    const tooltipHtml = `
+      <span class="tooltip-equipos">
+        <strong>${f.jugador}</strong>
+        <ul>
+          ${equipos.map(eq => `<li>${eq}</li>`).join('')}
+        </ul>
+      </span>
+    `;
+    return `
     <tr>
-      <td class="nombre"><span class="puesto">${i + 1}</span>${f.jugador}</td>
+      <td class="nombre">
+        <span class="nombre-tooltip-wrap">
+          <span class="puesto">${i + 1}</span>&nbsp;${f.jugador}
+          ${tooltipHtml}
+        </span>
+      </td>
       <td>${f.pj}</td>
       <td>${f.dg > 0 ? '+' + f.dg : f.dg}</td>
       <td class="pts">${f.pts}</td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // ===== FORM CARGA =====
