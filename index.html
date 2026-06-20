@@ -447,15 +447,14 @@
       <table class="posiciones">
         <thead>
           <tr>
-            <th style="width:36px">#</th>
-            <th>Jugador</th>
+            <th style="text-align:left;">Jugador</th>
             <th>PJ</th>
             <th>DG</th>
             <th>PTS</th>
           </tr>
         </thead>
         <tbody id="tabla-body">
-          <tr><td colspan="5" class="empty-msg">Cargando datos...</td></tr>
+          <tr><td colspan="4" class="empty-msg">Cargando datos...</td></tr>
         </tbody>
       </table>
       <div class="leyenda">
@@ -657,14 +656,13 @@ function renderTabla() {
 
   const tbody = document.getElementById('tabla-body');
   if (filas.every(f => f.pj === 0)) {
-    tbody.innerHTML = `<tr><td colspan="5" class="empty-msg">Todavía no se cargaron partidos</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" class="empty-msg">Todavía no se cargaron partidos</td></tr>`;
     return;
   }
 
   tbody.innerHTML = filas.map((f, i) => `
     <tr>
-      <td><span class="puesto">${i + 1}</span></td>
-      <td class="nombre">${f.jugador}</td>
+      <td class="nombre"><span class="puesto">${i + 1}</span>${f.jugador}</td>
       <td>${f.pj}</td>
       <td>${f.dg > 0 ? '+' + f.dg : f.dg}</td>
       <td class="pts">${f.pts}</td>
