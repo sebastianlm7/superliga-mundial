@@ -153,7 +153,7 @@
   }
 
   table.posiciones th {
-    background: var(--verde);
+    background: var(--azul);
     color: white;
     padding: 10px 6px;
     font-family: 'Bebas Neue', sans-serif;
@@ -233,17 +233,25 @@
   }
 
   .tooltip-equipos li {
-    padding: 1px 0;
+    padding: 2px 0;
     white-space: nowrap;
-  }
-
-  .tooltip-equipos li::before {
-    content: "⚽ ";
-    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   table.posiciones tr:nth-child(even) { background: #fafafa; }
   table.posiciones tr:hover { background: #eef6ee; }
+
+  .bandera {
+    width: 20px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
 
   .puesto {
     display: inline-flex;
@@ -297,8 +305,8 @@
     padding: 4px 0;
     font-size: 0.88rem;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 8px;
   }
 
   .badge-pts {
@@ -623,6 +631,69 @@ const JUGADORES = {
   "Juli":   ["Japon", "Noruega", "Escocia", "Ghana"]
 };
 
+// Mapa equipo -> código ISO (para banderas via flagcdn.com)
+const CODIGO_PAIS = {
+  "Francia": "fr",
+  "Senegal": "sn",
+  "Canada": "ca",
+  "Curazao": "cw",
+  "Argentina": "ar",
+  "Corea del Sur": "kr",
+  "Argelia": "dz",
+  "Haiti": "ht",
+  "España": "es",
+  "RD Congo": "cd",
+  "Arabia Saudita": "sa",
+  "Sudafrica": "za",
+  "Inglaterra": "gb-eng",
+  "Suiza": "ch",
+  "Austria": "at",
+  "Panama": "pa",
+  "Alemania": "de",
+  "Uruguay": "uy",
+  "Australia": "au",
+  "Jordania": "jo",
+  "Marruecos": "ma",
+  "Costa de Marfil": "ci",
+  "Ecuador": "ec",
+  "Irak": "iq",
+  "Estados Unidos": "us",
+  "Egipto": "eg",
+  "Republica Checa": "cz",
+  "Tunez": "tn",
+  "Brasil": "br",
+  "Suecia": "se",
+  "Cabo Verde": "cv",
+  "Iran": "ir",
+  "Portugal": "pt",
+  "Croacia": "hr",
+  "Turquia": "tr",
+  "Qatar": "qa",
+  "Paises Bajos": "nl",
+  "Belgica": "be",
+  "Bosnia": "ba",
+  "Uzbekistan": "uz",
+  "Colombia": "co",
+  "Mexico": "mx",
+  "Nueva Zelanda": "nz",
+  "Paraguay": "py",
+  "Japon": "jp",
+  "Noruega": "no",
+  "Escocia": "gb-sct",
+  "Ghana": "gh"
+};
+
+function banderaUrl(equipo) {
+  const codigo = CODIGO_PAIS[equipo];
+  return codigo ? `https://flagcdn.com/24x18/${codigo}.png` : '';
+}
+
+function banderaImg(equipo) {
+  const url = banderaUrl(equipo);
+  if (!url) return '';
+  return `<img src="${url}" alt="${equipo}" class="bandera" loading="lazy">`;
+}
+
 // Mapa equipo -> jugador
 const EQUIPO_A_JUGADOR = {};
 Object.entries(JUGADORES).forEach(([jugador, equipos]) => {
@@ -671,7 +742,7 @@ function renderEquipos() {
     div.innerHTML = `
       <h3>${jugador}</h3>
       <ul>
-        ${equipos.map(eq => `<li>${eq}</li>`).join('')}
+        ${equipos.map(eq => `<li>${banderaImg(eq)} ${eq}</li>`).join('')}
       </ul>
     `;
     grid.appendChild(div);
@@ -728,7 +799,7 @@ function renderTabla() {
       <span class="tooltip-equipos">
         <strong>${f.jugador}</strong>
         <ul>
-          ${equipos.map(eq => `<li>${eq}</li>`).join('')}
+          ${equipos.map(eq => `<li>${banderaImg(eq)} ${eq}</li>`).join('')}
         </ul>
       </span>
     `;
